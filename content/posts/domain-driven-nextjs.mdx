@@ -1,0 +1,89 @@
+---
+title: "The Power of Domain-Driven Design in Next.js"
+description: "How separating domain logic from framework code leads to more maintainable and testable applications."
+date: "2024-03-10"
+category: "coding"
+tags: ["nextjs", "architecture", "typescript"]
+published: true
+---
+
+# The Power of Domain-Driven Design in Next.js
+
+Most Next.js tutorials show you how to build fast, but not necessarily how to build maintainable. Let's change that.
+
+## The Problem with Framework-First Thinking
+
+When you start with the framework, everything becomes tightly coupled:
+
+```typescript
+// Everything mixed together
+export default function UserDashboard() {
+  const [user, setUser] = useState(null);
+  
+  useEffect(() => {
+    fetch('/api/user')
+      .then(res => res.json())
+      .then(data => setUser(data));
+  }, []);
+  
+  // Business logic here
+  // More business logic there
+  // Framework concerns everywhere
+}
+```
+
+## A Better Way: Ports and Adapters
+
+Instead, separate your concerns:
+
+**Domain** (pure TypeScript, no framework):
+```typescript
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface UserRepository {
+  getUser(id: string): Promise<User>;
+}
+```
+
+**Adapter** (implements the port):
+```typescript
+class ApiUserRepository implements UserRepository {
+  async getUser(id: string): Promise<User> {
+    const res = await fetch(`/api/users/${id}`);
+    return res.json();
+  }
+}
+```
+
+**UI** (thin orchestration):
+```typescript
+export default function UserDashboard() {
+  const user = useUser(); // hook wraps repository
+  return <UserProfile user={user} />;
+}
+```
+
+## The Benefits
+
+1. **Testability**: Test domain logic without React
+2. **Flexibility**: Swap API for mock data instantly
+3. **Readability**: Each layer has one job
+4. **Maintainability**: Change requirements don't break everything
+
+## Start Small
+
+You don't need to refactor everything. Start with one feature. Separate the domain types and port interface first. Then implement an adapter. Finally, wire it up in your UI.
+
+The investment pays off quickly.
+
+## Further Reading
+
+- Clean Architecture by Robert Martin
+- Domain-Driven Design by Eric Evans
+- Hexagonal Architecture patterns
+
+Build with intention. Your future self will thank you.

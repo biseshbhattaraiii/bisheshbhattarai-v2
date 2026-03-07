@@ -1,0 +1,256 @@
+---
+description: Next.js + TypeScript — reliability, reviewability, domain/ports structure, and limits
+alwaysApply: true
+---
+
+# Cursor Rules — Next.js + TypeScript (Reliability + Reviewability)
+
+These rules apply to all code generated or edited in this repo.
+
+## 0) Primary Goal
+Write code that is easy to change with minimal app knowledge. Requirement changes must not break core behavior.
+
+---
+
+## 1) Hard Limits (Non-Negotiable)
+
+### 1.1 File size limit
+- No source file should exceed **200 lines** (excluding blank lines).
+- If a file approaches 200 lines, split it immediately.
+
+### 1.2 Function size limit
+- No function should exceed **50 lines**.
+- Prefer 10–30 line functions.
+
+### 1.3 PR size discipline
+- Prefer small PRs (roughly <300 changed lines). Split if needed.
+
+---
+
+## 2) Required Project Structure
+Use (or migrate toward) this structure:
+
+```
+src/
+  app/                      # Next.js App Router pages/routes
+  ui/                       # presentational components (no business rules)
+    common/                 # reusable UI components
+    layout/                 # header, footer, navigation
+    animations/             # Framer Motion wrappers
+  domain/                   # PURE core logic (no React/Next.js imports)
+    usecases/
+    entities/
+    rules/
+    ports/
+    errors/
+    types/
+  adapters/                 # implementations of domain ports (http, storage, content)
+    http/
+    storage/
+    content/                # MDX file readers
+    telemetry/
+  state/                    # wiring (React Query/Zustand/Redux) — no business rules
+  lib/                      # shared utilities (config, logging, validation, fonts)
+  tests/
+content/                    # MDX content files (posts, projects)
+public/                     # static assets
+```
+
+---
+
+## 3) Separation of Concerns (Non-Negotiable)
+
+### 3.1 Domain is pure
+Code in src/domain MUST NOT import:
+- react, react-dom, next/*, routing libraries
+- fetch/axios
+- localStorage/sessionStorage
+- window/document
+- process.env
+- Date.now(), new Date(), Math.random()
+
+Domain can only use:
+- plain TS types
+- pure functions
+- ports (interfaces) injected as dependencies
+
+### 3.2 Pages orchestrate only
+Files in src/app should:
+- validate inputs/route params
+- call a usecase
+- render ui components
+- map errors to UI
+
+They MUST NOT contain business rules.
+
+### 3.3 UI components are presentational
+Files in src/ui must:
+- be driven by props
+- not perform IO
+- not encode business rules (formatting is OK)
+
+---
+
+## 4) Contracts, Types, Validation
+
+### 4.1 Validate at boundaries
+All external inputs must be validated:
+- API responses (always)
+- route params / query strings
+- form submissions (before calling usecases)
+- storage payloads
+- config/env values
+
+Use schemas (e.g., Zod). Never trust external JSON.
+
+### 4.2 No `any` at boundaries
+No `any` for API payloads, route params, storage blobs, or untyped JSON.
+Prefer schema inference.
+
+### 4.3 Stable DTOs + explicit mapping
+Use explicit DTOs for:
+- UI props
+- domain usecase inputs/outputs
+- adapter (API) payloads
+
+Use mapping functions between layers. Do not leak API shapes into domain/UI.
+
+---
+
+## 5) Error Handling (Typed, Explicit)
+
+### 5.1 Typed errors only in domain
+Domain usecases must:
+- return `Result<Ok, DomainError>` OR
+- throw only typed DomainError classes
+Use one consistent policy across the repo.
+
+No generic `throw new Error(...)` inside domain.
+
+### 5.2 Error mapping at boundaries
+- Adapters map HTTP/storage failures into domain errors (with context).
+- Pages map domain errors to user-safe messages and actions.
+
+---
+
+## 6) IO Through Ports (Replaceable Adapters)
+
+### 6.1 Ports owned by domain
+Domain defines interfaces (ports) such as:
+- `UserRepository`, `AuthGateway`, `Clock`, `FeatureFlags`, `Telemetry`, `KeyValueStore`
+
+Domain depends on ports only.
+
+### 6.2 Adapters implement ports
+Adapters are the only place allowed to use:
+- fetch/axios
+- localStorage/sessionStorage
+- window/document
+- process.env
+- fs/path (for MDX content adapters)
+- analytics SDKs
+
+---
+
+## 7) Determinism and Testability
+
+### 7.1 Inject time/random
+No Date/Math.random in domain.
+Use ports: `Clock.now()` and `Random.*`.
+
+### 7.2 No hidden global mutable state
+No module-level mutable caches.
+If unavoidable, isolate behind an adapter and test it.
+
+---
+
+## 8) Next.js Specific Rules
+
+### 8.1 Server vs Client Components
+- Default to Server Components (async, direct data access)
+- Use 'use client' only when needed: interactivity, hooks, browser APIs
+- Keep client components small and presentational
+
+### 8.2 Static Generation
+- Use generateStaticParams for dynamic routes
+- Prefer static generation over runtime data fetching
+- Cache appropriately with Next.js caching strategies
+
+### 8.3 Components should be boring
+- Prefer simple function components
+- Keep render logic minimal; extract helpers
+- Avoid "god hooks". Business rules go in domain usecases
+
+### 8.4 Side effects are explicit
+Side effects belong in:
+- adapters
+- page-level orchestration (thin hooks in client components)
+Never inside presentational ui components
+
+### 8.5 Accessibility baseline
+- Inputs have labels
+- Interactive elements are real buttons/links
+- Keyboard navigation works
+
+---
+
+## 9) Readability Rules (Review-Friendly)
+
+### 9.1 Reduce nesting
+Prefer guard clauses and early returns.
+
+### 9.2 Naming by intent
+- verbs for actions: `loadProfile`, `submitOrder`
+- nouns for data: `Order`, `UserProfile`
+Avoid vague names.
+
+### 9.3 Comments explain why, not what
+Refactor instead of commenting obvious logic.
+
+---
+
+## 10) Testing Rules
+
+### 10.1 Domain tests required
+For every new/changed usecase or rule:
+- add unit tests under src/domain/**/__tests__/*
+- deterministic only (no real time/network)
+
+### 10.2 Adapter tests targeted
+- validate schema parsing of API responses
+- verify error mapping behavior
+- mock fetch at adapter boundary
+
+---
+
+## 11) Cursor Operating Mode (How to Generate Code)
+
+When implementing a feature, Cursor must:
+1) Write a short plan (goal, non-goals, data shapes, errors, done criteria)
+2) Implement domain usecase + tests first
+3) Add/adjust ports and adapters
+4) Wire page/UI with minimal logic
+5) Validate at every boundary
+6) Keep every file under 200 lines by splitting into small modules
+
+---
+
+## 12) Forbidden Patterns
+Do NOT:
+- put business rules in pages/components
+- call fetch/localStorage/window/document from domain
+- use `any` at boundaries
+- swallow errors
+- use time/random directly in domain
+- create files >200 lines or functions >50 lines
+- change contracts silently
+
+---
+
+## 13) Definition of Done
+A feature is done only when:
+- domain usecase exists and is tested
+- boundaries validate input/output
+- adapters isolate IO and map errors
+- UI is thin and readable
+- every file remains <= 200 lines

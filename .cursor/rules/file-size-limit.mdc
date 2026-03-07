@@ -1,0 +1,36 @@
+---
+description: Enforce max 200 lines per file — split large modules into smaller, focused files
+alwaysApply: true
+---
+
+# File Size Limit: 200 Lines Max
+
+Every file MUST stay under 200 lines. If a file would exceed 200 lines, split it immediately.
+
+## Splitting Strategy
+
+### Python (API Gateway / Services)
+
+- Extract route handlers into separate router modules (e.g. `routes/xero.py`, `routes/disputes.py`).
+- Extract business logic into service files under `shared/` or `services/`.
+- Extract Pydantic models into `models/` files.
+- Extract helper/utility functions into focused modules.
+
+```
+# BAD — one 13000-line api_gateway.py
+api_gateway.py  (13000 lines)
+
+# GOOD — split into focused routers
+api_gateway.py                  (100 lines — app setup + include_router)
+routes/disputes.py              (180 lines)
+routes/xero.py                  (150 lines)
+routes/portal.py                (190 lines)
+models/dispute_models.py        (60 lines)
+```
+
+### General Rules
+
+1. **One concern per file** — a file should do one thing well.
+2. **Readable at a glance** — anyone should understand the file's purpose in under 10 seconds.
+3. **Imports over inline** — prefer importing from small, focused modules over inlining logic.
+4. **No dead code** — unused functions, commented-out blocks, or stale constants must be removed.
