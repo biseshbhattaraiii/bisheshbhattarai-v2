@@ -47,6 +47,12 @@ export default async function AdminPage() {
           New entry
         </Link>
         <Link
+          href="/admin/passport"
+          className="rounded-md border border-border px-5 py-2.5 text-sm font-medium text-secondary hover:border-accent/40 hover:text-accent"
+        >
+          Passport
+        </Link>
+        <Link
           href="/journal"
           className="rounded-md border border-border px-5 py-2.5 text-sm font-medium text-secondary hover:border-accent/40 hover:text-accent"
         >

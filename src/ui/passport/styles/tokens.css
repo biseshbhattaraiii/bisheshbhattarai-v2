@@ -1,0 +1,151 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Passport palette
+   ───────────────────────────────────────────────────────────────────
+   A passport booklet: forest-green foil cover, tinted security paper,
+   rubber-ink stamps. Light is the base; the site's `.dark` class on
+   <html> switches the tokens, exactly like globals.css.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.pp {
+  --pp-paper: #e2ece6;
+  --pp-paper-2: #d2e1d9;
+  --pp-card: #f6faf7;
+  --pp-line: #b5cbc1;
+  --pp-guil: #3f8574;
+  --pp-ink: #16262a;
+  --pp-muted: #52675f;
+  --pp-cover: #13392f;
+  --pp-cover-ink: #ece4c6;
+  --pp-foil: #c29d48;
+  --pp-red: #b02a3e;
+  --pp-blue: #24509a;
+  --pp-violet: #5d3a98;
+  --pp-green: #1b6f45;
+  --pp-ochre: #9a620e;
+  --pp-tape: rgba(206, 186, 120, 0.58);
+  --pp-note: #fbf8ec;
+  --pp-note-line: rgba(36, 80, 154, 0.16);
+  --pp-shadow: 0 1px 2px rgba(10, 32, 26, 0.14), 0 10px 26px -14px rgba(10, 32, 26, 0.45);
+
+  background: var(--pp-paper);
+  color: var(--pp-ink);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.dark .pp {
+  --pp-paper: #0f1d1a;
+  --pp-paper-2: #162925;
+  --pp-card: #1b2f2a;
+  --pp-line: #2f4a43;
+  --pp-guil: #7fc4b0;
+  --pp-ink: #e3eee8;
+  --pp-muted: #92aba3;
+  --pp-cover: #0a1a16;
+  --pp-foil: #d6b768;
+  --pp-red: #f0707f;
+  --pp-blue: #84a9ee;
+  --pp-violet: #b69df0;
+  --pp-green: #6ccf98;
+  --pp-ochre: #e5a84c;
+  --pp-tape: rgba(214, 190, 120, 0.32);
+  --pp-note: #22362f;
+  --pp-note-line: rgba(132, 169, 238, 0.16);
+  --pp-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 26px -14px rgba(0, 0, 0, 0.8);
+}
+
+.pp :focus-visible {
+  outline-color: var(--pp-foil);
+}
+
+.pp-display {
+  font-family: var(--font-stamp), 'Oswald', Impact, sans-serif;
+  text-transform: uppercase;
+}
+
+.pp-hand {
+  font-family: var(--font-hand), 'Segoe Print', cursive;
+}
+
+.pp-label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pp-muted);
+}
+
+.pp-muted {
+  color: var(--pp-muted);
+}
+
+.ink-red { color: var(--pp-red); }
+.ink-blue { color: var(--pp-blue); }
+.ink-violet { color: var(--pp-violet); }
+.ink-green { color: var(--pp-green); }
+.ink-ochre { color: var(--pp-ochre); }
+
+.pp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1.5px solid var(--pp-ink);
+  border-radius: 3px;
+  padding: 7px 14px;
+  font-family: var(--font-stamp), Impact, sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.pp-btn:hover {
+  background: color-mix(in srgb, var(--pp-ink) 8%, transparent);
+}
+
+.pp-chip {
+  border: 1.5px solid var(--pp-line);
+  border-radius: 99px;
+  padding: 4px 12px;
+  font-size: 13px;
+}
+
+.pp-chip[aria-pressed='true'] {
+  background: var(--pp-ink);
+  border-color: var(--pp-ink);
+  color: var(--pp-paper);
+}
+
+.pp-sec-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+  border-bottom: 1.5px solid var(--pp-line);
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+}
+
+.pp-sec-head h2 {
+  font-family: var(--font-stamp), Impact, sans-serif;
+  font-weight: 900;
+  font-size: clamp(24px, 4vw, 32px);
+  line-height: 1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.pp-sec-head .pp-label {
+  margin-left: auto;
+}
+
+.pp-empty {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  border: 2px dashed var(--pp-line);
+  border-radius: 6px;
+  padding: 36px 22px;
+  text-align: center;
+}
