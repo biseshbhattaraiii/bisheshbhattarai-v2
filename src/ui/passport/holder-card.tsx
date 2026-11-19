@@ -18,9 +18,9 @@ export function HolderCard({ holder, entries, fallbackName }: HolderCardProps) {
 
   const tiles = [
     { value: formatNumber(stats.stamps), unit: '', label: 'Stamps' },
+    { value: formatNumber(stats.places), unit: '', label: 'Places' },
+    { value: formatNumber(stats.ideas), unit: '', label: 'Ideas & lessons' },
     { value: formatNumber(stats.daysOut), unit: '', label: 'Days out there' },
-    { value: stats.highest ? formatNumber(stats.highest) : '—', unit: stats.highest ? 'M' : '', label: 'Highest point' },
-    { value: formatNumber(stats.kmOnFoot), unit: 'KM', label: 'Walked on treks' },
   ];
 
   return (

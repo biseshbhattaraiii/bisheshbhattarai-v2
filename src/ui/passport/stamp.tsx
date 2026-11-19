@@ -46,6 +46,7 @@ function face(entry: StampEntry, id: string): StampFace {
     headline: headline(entry),
     date,
     dashed: dream,
+    kind: entry.kind,
   };
 }
 

@@ -8,7 +8,7 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = buildMetadata({
   title: 'Passport',
-  description: `Treks, trips, hobbies, insights and films: every one a stamp in ${siteConfig.author.name}'s passport.`,
+  description: `Treks, travels, ideas, hobbies and films: every one a stamp in ${siteConfig.author.name}'s passport.`,
   path: '/passport',
 });
 
@@ -34,7 +34,7 @@ function EmptyShelf() {
       />
       <h2 className="pp-display text-3xl font-black">No stamps yet</h2>
       <p className="pp-muted m-0 max-w-[46ch]">
-        Every trek, trip, hobby, insight and film added from the back office gets its own stamp here.
+        Every trek, trip, idea, hobby and film added from the back office gets its own stamp here.
       </p>
     </div>
   );
