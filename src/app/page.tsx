@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Container, JsonLd } from '@/ui/common';
 import { siteConfig, socialLinks, substackUrl } from '@/lib/config';
 import { buildMetadata, graph, breadcrumbSchema } from '@/lib/seo';
@@ -43,6 +44,14 @@ export default function HomePage() {
               Subscribe on Substack
             </a>
           </div>
+
+          <p className="mt-step text-base text-secondary">
+            Treks, trips, hobbies and the lessons in between are stamped in{' '}
+            <Link href="/passport" className="link">
+              my passport
+            </Link>
+            .
+          </p>
 
           {socials.length > 0 && (
             <ul className="mt-step flex flex-wrap gap-x-5 text-sm text-secondary">
