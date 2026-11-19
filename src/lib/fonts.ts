@@ -1,14 +1,23 @@
-import { Inter } from 'next/font/google';
+import { Inter, Newsreader, JetBrains_Mono } from 'next/font/google';
 
+// Body / UI typeface — quiet, legible, modern.
 export const fontSans = Inter({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-sans',
 });
 
-export const fontDisplay = Inter({
+// Editorial serif — headlines, entry titles, pull quotes.
+export const fontDisplay = Newsreader({
   subsets: ['latin'],
   display: 'swap',
-  weight: ['700', '800'],
+  style: ['normal', 'italic'],
   variable: '--font-display',
+});
+
+// Labels, dates, code.
+export const fontMono = JetBrains_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-mono',
 });

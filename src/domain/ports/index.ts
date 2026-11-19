@@ -1,1 +1,5 @@
-export type { ContentRepository } from './content-repository';
+export type {
+  ContentRepository,
+  CategoryCount,
+  PostNeighbours,
+} from './content-repository';

@@ -1,13 +1,36 @@
 import type { ReactNode } from 'react';
 
+type Size = 'page' | 'content' | 'prose';
+
 interface ContainerProps {
   children: ReactNode;
+  /**
+   * page    — full-width layout (grids, headers, footers)
+   * content — wide editorial column
+   * prose   — reading measure, ~70 characters
+   */
+  size?: Size;
   className?: string;
 }
 
-export function Container({ children, className = '' }: ContainerProps) {
-  const baseClasses = 'mx-auto max-w-7xl px-4 sm:px-6 lg:px-8';
-  const classes = className ? `${baseClasses} ${className}` : baseClasses;
+const sizes: Record<Size, string> = {
+  page: 'max-w-page',
+  content: 'max-w-content',
+  prose: 'max-w-prose',
+};
 
-  return <div className={classes}>{children}</div>;
+export function Container({
+  children,
+  size = 'page',
+  className = '',
+}: ContainerProps) {
+  return (
+    <div
+      className={['mx-auto w-full px-5 sm:px-8 lg:px-12', sizes[size], className]
+        .filter(Boolean)
+        .join(' ')}
+    >
+      {children}
+    </div>
+  );
 }

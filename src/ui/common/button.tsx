@@ -16,20 +16,29 @@ export function Button({
   className = '',
   onClick,
 }: ButtonProps) {
-  const baseClasses =
-    'inline-flex items-center justify-center rounded-lg px-6 py-3 font-medium transition-colors';
+  const base =
+    'inline-flex items-center justify-center rounded-md border px-5 py-2.5 text-sm font-medium';
 
-  const variantClasses = {
-    primary: 'bg-primary text-background hover:bg-accent',
-    secondary: 'bg-secondary text-foreground hover:bg-muted',
-    ghost: 'text-foreground hover:bg-muted',
-  };
+  const variants = {
+    primary: 'border-accent bg-accent text-white hover:bg-accent/90',
+    secondary:
+      'border-border bg-surface text-foreground hover:border-accent/40 hover:text-accent',
+    ghost: 'border-transparent text-secondary hover:text-accent',
+  } as const;
 
-  const classes = className
-    ? `${baseClasses} ${variantClasses[variant]} ${className}`
-    : `${baseClasses} ${variantClasses[variant]}`;
+  const classes = [base, variants[variant], className]
+    .filter(Boolean)
+    .join(' ');
 
   if (href) {
+    const external = href.startsWith('http') || href.startsWith('mailto:');
+    if (external) {
+      return (
+        <a href={href} className={classes}>
+          {children}
+        </a>
+      );
+    }
     return (
       <Link href={href} className={classes}>
         {children}
@@ -38,7 +47,7 @@ export function Button({
   }
 
   return (
-    <button onClick={onClick} className={classes}>
+    <button type="button" onClick={onClick} className={classes}>
       {children}
     </button>
   );

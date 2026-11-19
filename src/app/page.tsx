@@ -1,95 +1,75 @@
-import Link from 'next/link';
-import { format } from 'date-fns';
-import { Container, Card, Tag } from '@/ui/common';
-import { HeroScene, FadeIn, PageDecor } from '@/ui/animations';
-import { contentRepository } from '@/adapters/content';
-import { siteConfig } from '@/lib/config';
+import type { Metadata } from 'next';
+import { Container, JsonLd } from '@/ui/common';
+import { siteConfig, socialLinks, substackUrl } from '@/lib/config';
+import { buildMetadata, graph, breadcrumbSchema } from '@/lib/seo';
+import { hero } from '@/lib/narrative';
 
-export default async function HomePage() {
-  const allPosts = await contentRepository.getAllPosts();
-  const latestPosts = allPosts.slice(0, 3);
-  const featuredProjects = await contentRepository.getFeaturedProjects();
-  const featuredProject = featuredProjects[0];
+export const metadata: Metadata = buildMetadata({
+  title: siteConfig.title,
+  description: siteConfig.description,
+  path: '/',
+});
+
+/**
+ * One screen: the line, the notebook, a way to reach me.
+ *
+ * Nothing else is surfaced here by design. Entries stay at their own URLs,
+ * reachable by anyone holding the link.
+ */
+export default function HomePage() {
+  const socials = socialLinks();
 
   return (
     <>
-      <PageDecor variant="runner" />
-      <PageDecor variant="car" />
-      <div className="py-12">
-        <Container>
-          <HeroScene />
+      <section>
+        <Container className="py-step-4">
+          <h1 className="max-w-4xl font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl">
+            {hero.headline}
+          </h1>
 
-          <FadeIn delay={0.3}>
-            <div className="mt-12 text-center max-w-3xl mx-auto">
-              <h1 className="text-4xl md:text-5xl font-bold font-display mb-6">
-                {siteConfig.author.name}
-              </h1>
-              <p className="text-xl text-secondary leading-relaxed">
-                {siteConfig.author.bio}
-              </p>
-            </div>
-          </FadeIn>
+          <p className="mt-6 text-lg text-secondary md:text-xl">
+            Read my notebook at{' '}
+            <a href={substackUrl} rel="noreferrer" className="link">
+              bishes.substack.com
+            </a>
+          </p>
 
-          <FadeIn delay={0.5}>
-            <section className="mt-20">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-bold font-display">
-                  Latest from the Journal
-                </h2>
-                <Link
-                  href="/journal"
-                  className="text-primary hover:text-accent transition-colors font-medium"
-                >
-                  View all →
-                </Link>
-              </div>
+          <div className="mt-8">
+            <a
+              href={substackUrl}
+              rel="noreferrer"
+              className="inline-flex items-center rounded-md border border-accent bg-accent px-5 py-2.5 text-sm font-medium text-white hover:bg-accent/90"
+            >
+              Subscribe on Substack
+            </a>
+          </div>
 
-              <div className="grid gap-6 md:grid-cols-3">
-                {latestPosts.map((post) => (
-                  <Card key={post.slug} href={`/journal/${post.slug}`}>
-                    <div className="mb-3">
-                      <Tag>{post.category}</Tag>
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-                    <p className="text-secondary mb-4">{post.description}</p>
-                    <div className="flex items-center justify-between text-sm text-secondary">
-                      <time>{format(new Date(post.date), 'MMM d, yyyy')}</time>
-                      {post.readingTime && <span>{post.readingTime} min read</span>}
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </section>
-          </FadeIn>
-
-          {featuredProject && (
-            <FadeIn delay={0.7}>
-              <section className="mt-20">
-                <h2 className="text-3xl font-bold font-display mb-8">
-                  Featured Project
-                </h2>
-                <Card href={`/projects/${featuredProject.slug}`}>
-                  <div className="flex flex-col md:flex-row gap-6">
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-semibold mb-3">
-                        {featuredProject.title}
-                      </h3>
-                      <p className="text-secondary mb-4">
-                        {featuredProject.description}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {featuredProject.tags.map((tag) => (
-                          <Tag key={tag}>{tag}</Tag>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </section>
-            </FadeIn>
+          {socials.length > 0 && (
+            <ul className="mt-step flex flex-wrap gap-x-5 text-sm text-secondary">
+              {socials.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="me noreferrer"
+                    className="inline-block py-1.5 hover:text-accent"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           )}
+
+          <p className="mt-step text-sm text-secondary">
+            <a href={`mailto:${siteConfig.author.email}`} className="link">
+              {siteConfig.author.email}
+            </a>
+          </p>
         </Container>
-      </div>
+      </section>
+
+      <JsonLd data={graph(breadcrumbSchema([{ name: 'Home', path: '/' }]))} />
     </>
   );
 }

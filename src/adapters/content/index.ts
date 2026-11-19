@@ -1,2 +1,2 @@
-export { contentRepository } from './mdx-repository';
+export { contentRepository, readPostSource } from './mdx-repository';
 export type { MdxContentRepository } from './mdx-repository';

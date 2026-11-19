@@ -2,39 +2,238 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════════════════════
+   Palette
+   ───────────────────────────────────────────────────────────────────
+   Light is the base. Dark is applied by a `.dark` class on <html>,
+   set before first paint by the inline theme script in the layout, so
+   there is no flash and the toggle wins over the system preference.
+   ═══════════════════════════════════════════════════════════════════ */
+
 @layer base {
   :root {
-    /* Paper-like, warm cream tones inspired by math textbooks */
-    --background: 250 248 243;
-    --foreground: 44 42 38;
-    --primary: 168 85 247;
-    --secondary: 120 113 108;
-    --accent: 234 88 12;
-    --muted: 245 243 238;
-    --border: 231 229 224;
-    --grid: 240 237 230;
+    --background: 252 251 249;
+    --surface: 255 255 255;
+    --foreground: 24 24 27;
+    --secondary: 92 92 98;
+    --accent: 194 65 43;
+    --muted: 244 243 239;
+    --border: 227 225 219;
+    --highlight: 250 226 158;
+    --shadow: 24 24 27;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --background: 28 25 23;
-      --foreground: 250 248 243;
-      --primary: 196 181 253;
-      --secondary: 168 162 158;
-      --accent: 251 146 60;
-      --muted: 41 37 36;
-      --border: 68 64 60;
-      --grid: 41 37 36;
-    }
+  .dark {
+    --background: 14 14 16;
+    --surface: 22 22 25;
+    --foreground: 237 236 233;
+    --secondary: 158 157 154;
+    --accent: 233 133 106;
+    --muted: 28 28 31;
+    --border: 44 44 48;
+    --highlight: 92 74 32;
+    --shadow: 0 0 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-size: 1.0625rem;
+    line-height: 1.7;
     font-feature-settings: 'rlig' 1, 'calt' 1;
-    background-image: 
-      linear-gradient(rgb(var(--grid) / 0.5) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(var(--grid) / 0.5) 1px, transparent 1px);
-    background-size: 20px 20px;
-    background-position: -1px -1px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: rgb(var(--highlight));
+    color: rgb(var(--foreground));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  /* Colour changes only — nothing on this site moves. */
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    transition: color 120ms linear, background-color 120ms linear,
+      border-color 120ms linear;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .link {
+    @apply text-accent underline decoration-accent/35 underline-offset-4 hover:decoration-accent;
+  }
+
+  .label {
+    @apply font-mono text-[0.7rem] uppercase tracking-[0.16em] text-secondary;
+  }
+
+  .card {
+    @apply rounded-lg border border-border bg-surface;
+  }
+
+  .card-hover:hover {
+    @apply border-accent/40;
+  }
+
+  .highlighted {
+    background: linear-gradient(
+      to bottom,
+      transparent 58%,
+      rgb(var(--highlight)) 58%
+    );
+  }
+
+  /* Writing surface used by the editor. */
+  .field {
+    @apply w-full rounded-md border border-border bg-surface px-3 py-2 text-base outline-none focus:border-accent sm:text-sm;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Long-form entries
+   ═══════════════════════════════════════════════════════════════════ */
+
+@layer base {
+  /* Long URLs and unbroken identifiers wrap rather than widening the page. */
+  .entry {
+    @apply text-[1.0125rem] leading-[1.7] sm:text-[1.075rem] sm:leading-[1.75];
+    overflow-wrap: break-word;
+  }
+
+  .entry > * + * {
+    margin-top: 1.35em;
+  }
+
+  .entry h2 {
+    @apply mt-step-2 font-display text-[1.75rem] font-semibold leading-tight tracking-tight;
+    scroll-margin-top: 6rem;
+  }
+
+  .entry h3 {
+    @apply mt-step font-display text-xl font-semibold leading-snug tracking-tight;
+    scroll-margin-top: 6rem;
+  }
+
+  .entry h2 .anchor,
+  .entry h3 .anchor {
+    @apply ml-2 text-base text-transparent;
+  }
+
+  .entry h2:hover .anchor,
+  .entry h3:hover .anchor {
+    @apply text-secondary;
+  }
+
+  .entry a {
+    color: rgb(var(--accent));
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: rgb(var(--accent) / 0.35);
+  }
+
+  .entry a:hover {
+    text-decoration-color: rgb(var(--accent));
+  }
+
+  .entry ul,
+  .entry ol {
+    @apply space-y-2 pl-6;
+  }
+
+  .entry ul {
+    @apply list-disc marker:text-accent;
+  }
+
+  .entry ol {
+    @apply list-decimal marker:text-secondary;
+  }
+
+  .entry strong {
+    @apply font-semibold;
+  }
+
+  .entry code {
+    @apply rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[0.85em];
+  }
+
+  .entry pre {
+    @apply overflow-x-auto rounded-lg border border-border bg-muted p-4 font-mono text-[0.85rem] leading-relaxed;
+  }
+
+  .entry pre code {
+    @apply border-0 bg-transparent p-0 text-inherit;
+  }
+
+  .entry blockquote {
+    @apply border-l-2 border-accent pl-5 font-display text-[1.15rem] italic text-secondary;
+  }
+
+  .entry hr {
+    @apply my-step-2 border-border;
+  }
+
+  /* A wide table scrolls inside itself instead of stretching the page. */
+  .entry table {
+    @apply border-collapse text-left text-sm;
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .entry th,
+  .entry td {
+    @apply border border-border px-3 py-2;
+  }
+
+  .entry img {
+    @apply rounded-lg border border-border;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Print
+   ═══════════════════════════════════════════════════════════════════ */
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.75em;
+    color: #555;
   }
 }
