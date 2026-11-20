@@ -7,8 +7,8 @@ export const contentType = ogContentType;
 
 export default function OgImage() {
   return renderOgImage({
-    eyebrow: 'Build in Public',
-    title: 'I build internet products in public.',
+    eyebrow: 'Diary',
+    title: 'BISHESH.md',
     subtitle: siteConfig.description,
     footer: siteConfig.author.name,
     note: siteConfig.url.replace(/^https?:\/\//, ''),

@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Container } from '@/ui/common';
-import { substackUrl } from '@/lib/config';
 
 export const metadata: Metadata = {
   title: 'Page not found',
@@ -16,15 +15,12 @@ export default function NotFound() {
         That page isn&rsquo;t here.
       </h1>
       <p className="mt-4 max-w-lg text-lg text-secondary">
-        The writing moved to Substack.
+        It may have been moved, or it never existed.
       </p>
       <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
         <Link href="/" className="link">
-          Home
+          Back to the diary
         </Link>
-        <a href={substackUrl} rel="noreferrer" className="link">
-          bishes.substack.com
-        </a>
       </div>
     </Container>
   );
