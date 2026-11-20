@@ -8,8 +8,6 @@ updated: 2026-11-20
 
 > a diary. notes to self, mostly.
 
-> not a portfolio. not a newsletter. not a pitch.
-
 > written down when something is worth keeping.
 
 ## what this file is
@@ -24,37 +22,37 @@ Some of it will be wrong in six months. That is fine. I can change the path. Not
 
 ### 1. leverage
 
-When I talk about leverage, most people don't get the response I expect. Most people have no idea of it. So I keep writing it down.
+I keep looking for the thing that does more with less. One idea, one tool, one habit that moves ten things at once.
 
-Work smart, then work hard. Look for the opportunity. Use every unfair advantage I have to reach the goal.
+Work smart first. Then work hard.
 
-### 2. reject mediocrity
+### 2. all in
 
-I don't want to live like most of the population. Same mindset, same simple life, fun only on the weekend.
+When I'm working, I want to be fully in it. When I'm resting, fully out of it. Half of each never felt right to me.
 
-Be either here or there. Enjoy life fully, or work fully. Not a little of both.
+### 3. change the path, not the goal
 
-### 3. change your path, not your goal
+The goal stays. The way there can change. Sometimes there is an easier road, and I only see it if I keep looking.
 
-The goal stays. The path to it can change. Sometimes there is an easier way to do the same thing, and the job is to notice it.
+### 4. fun that lasts
 
-### 4. fun for a long stretch
+I don't want fun only in short breaks. I want long stretches of it, with the work as part of it.
 
-Not fun as a short break between work. Fun for six months at a time. Even while working, I need to have fun.
+### 5. AI as a teammate
 
-### 5. give it a job, not a question
+When I give it a job instead of a question, it actually does the work. I'm still learning how far that goes.
 
-AI is not a tool to ask things. It is an employee. Give it a job, let it do the thing, review what matters.
+### 6. my own thoughts
 
-### 6. think my own thoughts
+I take in a lot. The good part comes after, when I sit with it and something of my own shows up.
 
-Most people don't think they are capable of more. They think what other people have assumed.
+### 7. see it through
 
-Take in the information. Then sit with it. Come out with an idea that is mine.
+Take a problem and stay with it until it is solved.
 
-### 7. solve it to the end
+* * *
 
-Take a problem and solve it to the end. That is the whole mindset.
+{{passport}}
 
 * * *
 

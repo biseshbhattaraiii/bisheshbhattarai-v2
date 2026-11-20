@@ -4,6 +4,7 @@ import { format, parseISO } from 'date-fns';
 import { ThemeToggle } from '@/ui/common';
 import type { Diary, DiaryBlock } from '@/lib/diary';
 import { diaryFontVars } from '@/lib/diary-fonts';
+import { passportFontVars } from '@/lib/passport/fonts';
 import './diary.css';
 
 /* ── Inline marks: [links](…), **bold**, _italic_, `code` ─────────── */
@@ -60,8 +61,13 @@ function prettyDate(value?: string, pattern = 'MMM d, yyyy'): string | undefined
 
 /* ── One block of the file ──────────────────────────────────────── */
 
-function Block({ block, last }: { block: DiaryBlock; last: boolean }) {
+/** Live sections, keyed by the name used in a `{{name}}` line. */
+type Slots = Record<string, ReactNode>;
+
+function Block({ block, last, slots }: { block: DiaryBlock; last: boolean; slots: Slots }) {
   switch (block.kind) {
+    case 'slot':
+      return <>{slots[block.name] ?? null}</>;
     case 'title':
       return <h2 className="d-h2 d-r">{inline(block.text)}</h2>;
     case 'h2':
@@ -120,13 +126,16 @@ function Block({ block, last }: { block: DiaryBlock; last: boolean }) {
 
 /* ── The page ───────────────────────────────────────────────────── */
 
-export function DiaryPage({ diary, author }: { diary: Diary; author: string }) {
+export function DiaryPage({ diary, author, slots = {} }: { diary: Diary; author: string; slots?: Slots }) {
+  // A slot the file never placed still shows, at the end of the file.
+  const placed = new Set(diary.blocks.flatMap((b) => (b.kind === 'slot' ? [b.name] : [])));
+  const unplaced = Object.keys(slots).filter((name) => !placed.has(name));
   const [word, ...rest] = diary.title.split('.');
   const ext = rest.length ? `.${rest.join('.')}` : '';
   const started = prettyDate(diary.started);
 
   return (
-    <div className={`diary ${diaryFontVars}`}>
+    <div className={`diary ${diaryFontVars} ${passportFontVars}`}>
       <a href="#read" className="d-skip">
         Skip to the text
       </a>
@@ -137,7 +146,7 @@ export function DiaryPage({ diary, author }: { diary: Diary; author: string }) {
           <span className="d-dot" aria-hidden="true" />
         </Link>
         <nav className="d-bar-nav" aria-label="Site">
-          <Link href="/passport">passport</Link>
+          <a href="#passport">passport</a>
           <ThemeToggle />
         </nav>
       </header>
@@ -183,7 +192,10 @@ export function DiaryPage({ diary, author }: { diary: Diary; author: string }) {
         </h2>
 
         {diary.blocks.map((block, i) => (
-          <Block key={i} block={block} last={i === diary.blocks.length - 1} />
+          <Block key={i} block={block} last={i === diary.blocks.length - 1} slots={slots} />
+        ))}
+        {unplaced.map((name) => (
+          <Fragment key={name}>{slots[name]}</Fragment>
         ))}
       </article>
 
