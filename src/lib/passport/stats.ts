@@ -1,4 +1,4 @@
-import type { PassportEntry } from '@/domain/types/passport';
+import type { EntryKind, PassportEntry } from '@/domain/types/passport';
 import { parseDay } from './format';
 
 /** Days covered by an entry: the date range, else the number of day logs. */
@@ -28,13 +28,19 @@ export function byDateDesc(a: PassportEntry, b: PassportEntry): number {
 
 export interface PassportStats {
   stamps: number;
+  /** Distinct places across treks and travels. */
+  places: number;
+  /** Idea entries plus every lesson noted on any entry. */
+  ideas: number;
   daysOut: number;
   highest: number | null;
   kmOnFoot: number;
   firstEntry: string;
+  /** Done entries per kind. */
+  byKind: Record<EntryKind, number>;
 }
 
-/** Totals for the holder page, over walked (not dreamed) entries. */
+/** Totals for the holder page, over lived (not dreamed) entries. */
 export function passportStats(entries: PassportEntry[]): PassportStats {
   const done = entries.filter((e) => e.status === 'done');
   const outdoors = done.filter((e) => e.kind === 'trek' || e.kind === 'travel');
@@ -42,9 +48,17 @@ export function passportStats(entries: PassportEntry[]): PassportStats {
     .map(entryHighest)
     .reduce<number>((m, v) => Math.max(m, v ?? 0), 0);
   const dates = done.map((e) => e.startDate).filter(Boolean).sort();
+  const places = new Set(
+    outdoors.map((e) => e.place.trim().toLowerCase()).filter(Boolean)
+  );
+  const byKind: Record<EntryKind, number> = { trek: 0, travel: 0, hobby: 0, insight: 0, video: 0 };
+  for (const e of done) byKind[e.kind] += 1;
 
   return {
     stamps: done.length,
+    places: places.size,
+    ideas: byKind.insight + done.reduce((sum, e) => sum + e.insights.filter(Boolean).length, 0),
+    byKind,
     daysOut: outdoors.reduce((sum, e) => sum + entryDays(e), 0),
     highest: highest > 0 ? highest : null,
     kmOnFoot: done
@@ -62,7 +76,7 @@ export function mrzLines(name: string, homeBase: string, stats: PassportStats): 
   return [
     pad(`P<TRL${letters(name || 'TRAVELLER')}<<${letters(homeBase)}`),
     pad(
-      `${num(stats.stamps, 3)}STAMPS<${num(stats.daysOut, 4)}DAYS<${num(stats.highest ?? 0, 5)}M<${num(stats.kmOnFoot, 5)}KM`
+      `${num(stats.stamps, 3)}STAMPS<${num(stats.places, 3)}PLACES<${num(stats.ideas, 3)}IDEAS<${num(stats.daysOut, 4)}DAYS`
     ),
   ];
 }

@@ -16,6 +16,7 @@ export class PassportError extends Error {
 function refreshPublicPages() {
   revalidateTag(PASSPORT_TAG);
   revalidatePath('/passport', 'layout');
+  revalidatePath('/');
 }
 
 /** Every media URL still referenced anywhere in the passport. */

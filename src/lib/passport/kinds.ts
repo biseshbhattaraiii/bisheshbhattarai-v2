@@ -41,7 +41,7 @@ export const kinds: KindMeta[] = [
   {
     kind: 'travel',
     label: 'Travel',
-    plural: 'Trips',
+    plural: 'Travels',
     hint: 'A trip or a place: where you went and what happened.',
     shape: 'rect',
     ink: 'blue',
@@ -66,9 +66,9 @@ export const kinds: KindMeta[] = [
   },
   {
     kind: 'insight',
-    label: 'Insight',
-    plural: 'Insights',
-    hint: 'A realisation worth keeping.',
+    label: 'Idea',
+    plural: 'Ideas',
+    hint: 'An idea, a realisation or a lesson worth keeping.',
     shape: 'oval',
     ink: 'violet',
     stampWord: 'NOTED',
@@ -80,7 +80,7 @@ export const kinds: KindMeta[] = [
   {
     kind: 'video',
     label: 'Video',
-    plural: 'Videos',
+    plural: 'Films',
     hint: 'A travel film or vlog on YouTube.',
     shape: 'peak',
     ink: 'ochre',

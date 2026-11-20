@@ -14,7 +14,9 @@ function Emblem() {
     <svg viewBox="0 0 40 40" aria-hidden="true" className="h-9 w-9 shrink-0" style={{ color: 'var(--pp-foil)' }}>
       <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" strokeWidth="1.6" />
       <circle cx="20" cy="20" r="14.5" fill="none" stroke="currentColor" strokeWidth=".8" />
-      <path d="M8 27 L16 15 L20 20 L24 13 L32 27 Z" fill="currentColor" />
+      <circle cx="20" cy="20" r="9" fill="none" stroke="currentColor" strokeWidth="1.4" />
+      <ellipse cx="20" cy="20" rx="4" ry="9" fill="none" stroke="currentColor" strokeWidth="1.1" />
+      <path d="M11 20 H29 M12.5 15.5 H27.5 M12.5 24.5 H27.5" fill="none" stroke="currentColor" strokeWidth="1" />
     </svg>
   );
 }
