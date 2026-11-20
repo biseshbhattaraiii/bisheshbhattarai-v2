@@ -17,7 +17,9 @@ export type DiaryBlock =
   | { kind: 'quote'; text: string }
   | { kind: 'list'; items: string[] }
   | { kind: 'rule' }
-  | { kind: 'para'; lines: string[] };
+  | { kind: 'para'; lines: string[] }
+  /** A `{{name}}` line on its own: a live section the page fills in. */
+  | { kind: 'slot'; name: string };
 
 export interface Diary {
   title: string;
@@ -53,7 +55,9 @@ export function parseDiary(source: string): Diary {
   let list: string[] = [];
 
   const flush = () => {
-    if (para.length) blocks.push({ kind: 'para', lines: para });
+    const slot = para.length === 1 ? /^\{\{\s*([a-z-]+)\s*\}\}$/.exec(para[0]!) : null;
+    if (slot) blocks.push({ kind: 'slot', name: slot[1]! });
+    else if (para.length) blocks.push({ kind: 'para', lines: para });
     if (list.length) blocks.push({ kind: 'list', items: list });
     para = [];
     list = [];
