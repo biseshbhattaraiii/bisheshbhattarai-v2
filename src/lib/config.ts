@@ -8,22 +8,15 @@ export const siteUrl = (
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bisheshbhattarai.com'
 ).replace(/\/$/, '');
 
-/**
- * The writing lives on Substack. Every call to action on this site points
- * there: there is nothing to subscribe to here.
- */
-export const substackUrl = 'https://bishes.substack.com';
-
 export const siteConfig: SiteConfig = {
   name: 'Bishesh Bhattarai',
-  title: 'Bishesh Bhattarai · I build internet products',
-  description:
-    'I build internet products. The notebook, with everything I write, is at bishes.substack.com.',
+  title: 'BISHESH.md · a diary',
+  description: 'A diary in plain text. Notes to self, mostly.',
   url: siteUrl,
   locale: 'en_AU',
   author: {
     name: 'Bishesh Bhattarai',
-    bio: 'I build internet products in public, and write down what actually happens.',
+    bio: 'A diary in plain text. Notes to self, mostly.',
     jobTitle: 'Founder & Product Builder',
     email: 'hello@bisheshbhattarai.com',
     // [[Replace with your real handles — leave a field out to hide the link]]
@@ -34,17 +27,8 @@ export const siteConfig: SiteConfig = {
     tiktok: '[[@yourhandle]]',
     instagram: '[[yourhandle]]',
   },
-  keywords: [
-    'Bishesh Bhattarai',
-    'build in public',
-    'indie SaaS',
-    'software agency',
-    'bootstrapped SaaS',
-    'agency owner',
-    'SaaS revenue',
-    'founder journal',
-  ],
-  // Deliberately empty: the site shows one page and links out.
+  keywords: ['Bishesh Bhattarai', 'diary', 'notes to self', 'leverage', 'agency mindset'],
+  // Deliberately empty: the site is one page, the diary.
   navigation: [],
 };
 

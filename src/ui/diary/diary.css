@@ -1,0 +1,443 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Diary: the site as one markdown file.
+   Paper and ink, a typewriter for the marks, one orange dot.
+   Light is the base; the site's `.dark` class on <html> flips it.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.diary {
+  --d-bg: #f4efe8;
+  --d-ink: #201e1f;
+  --d-muted: #6d675f;
+  --d-line: #d8cfc2;
+  --d-accent: #e23c08;
+  --d-select: #ffd3c2;
+
+  --d-f-body: var(--d-body), 'Helvetica Neue', Arial, sans-serif;
+  --d-f-serif: var(--d-serif), Georgia, serif;
+  --d-f-mono: var(--d-mono), ui-monospace, Menlo, monospace;
+
+  --d-pad: clamp(16px, 2.4vw, 40px);
+
+  position: relative;
+  min-height: 100vh;
+  overflow-x: clip;
+  background: var(--d-bg);
+  color: var(--d-ink);
+  font-family: var(--d-f-body);
+  font-variation-settings: 'opsz' 24;
+}
+
+.dark .diary {
+  --d-bg: #201e1f;
+  --d-ink: #f4efe8;
+  --d-muted: #a39d94;
+  --d-line: #3d3a38;
+  --d-accent: #fc4109;
+  --d-select: #5b1d0b;
+}
+
+.diary ::selection {
+  background: var(--d-select);
+}
+
+/* Paper grain over everything, never in the way of a click. */
+.diary::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.diary > * {
+  position: relative;
+  z-index: 1;
+}
+
+.diary a {
+  color: inherit;
+}
+
+/* ── Skip link ─────────────────────────────────────────────────── */
+
+.d-skip {
+  position: absolute !important;
+  left: var(--d-pad);
+  top: -100px;
+  z-index: 30 !important;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--d-ink);
+  color: var(--d-bg) !important;
+  font-family: var(--d-f-mono);
+}
+
+.d-skip:focus {
+  top: 12px;
+}
+
+/* ── Top bar ───────────────────────────────────────────────────── */
+
+.d-bar {
+  position: sticky !important;
+  top: 0;
+  z-index: 20 !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px var(--d-pad);
+  background: color-mix(in srgb, var(--d-bg) 82%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.d-bar-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.d-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--d-accent);
+  animation: d-blink 2.4s ease-in-out infinite;
+}
+
+.d-bar-nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--d-f-mono);
+  font-size: 15px;
+}
+
+.d-bar-nav a {
+  text-decoration: none;
+}
+
+.d-bar-nav a:hover {
+  color: var(--d-accent);
+}
+
+/* ── Opening page ──────────────────────────────────────────────── */
+
+.d-hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100svh - 60px);
+  padding: 6vh var(--d-pad) 10vh;
+}
+
+.d-word {
+  margin: 0;
+  font-family: var(--d-f-body);
+  font-weight: 700;
+  font-variation-settings: 'opsz' 96;
+  font-size: clamp(64px, 15vw, 248px);
+  line-height: 0.86;
+  letter-spacing: -0.055em;
+  animation: d-rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.d-ext {
+  margin-left: 0.04em;
+  font-family: var(--d-f-mono);
+  font-weight: 400;
+  font-size: 0.32em;
+  letter-spacing: 0;
+  color: var(--d-accent);
+  vertical-align: 0.12em;
+}
+
+.d-hero-lines {
+  margin-top: clamp(28px, 5vh, 56px);
+  max-width: 36rem;
+}
+
+.d-hero-lines p {
+  margin: 0 0 6px;
+  font-family: var(--d-f-serif);
+  font-style: italic;
+  font-size: clamp(22px, 2.6vw, 36px);
+  line-height: 1.25;
+  animation: d-rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.d-byline {
+  margin-top: clamp(28px, 5vh, 48px);
+  font-family: var(--d-f-mono);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  color: var(--d-muted);
+  animation: d-fade 1s 1.4s both;
+}
+
+.d-scroll {
+  align-self: flex-start;
+  margin-top: 28px;
+  font-family: var(--d-f-mono);
+  font-size: 14px;
+  color: var(--d-muted) !important;
+  text-decoration: none;
+  animation: d-fade 1s 1.8s both;
+}
+
+.d-scroll::after {
+  content: ' ↓';
+  display: inline-block;
+  animation: d-bob 1.8s ease-in-out infinite;
+}
+
+/* ── The file ──────────────────────────────────────────────────── */
+
+.d-file {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 0 var(--d-pad) 12vh;
+  font-size: clamp(17px, 1.25vw, 20px);
+  line-height: 1.65;
+  scroll-margin-top: 64px;
+}
+
+.d-filename {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 56px;
+  padding: 10px 0;
+  border-top: 1px solid var(--d-line);
+  border-bottom: 1px solid var(--d-line);
+  font-family: var(--d-f-mono);
+  font-size: 13px;
+  color: var(--d-muted);
+}
+
+/* The markdown marks. They hang in the margin on wide screens, so the
+   words line up like they would in an editor with a gutter. */
+.d-mark {
+  font-family: var(--d-f-mono);
+  font-style: normal;
+  font-weight: 400;
+  color: var(--d-accent);
+  margin-right: 0.6em;
+}
+
+@media (min-width: 900px) {
+  .d-h2,
+  .d-h3,
+  .d-quote,
+  .d-list li {
+    position: relative;
+  }
+
+  .d-h2 .d-mark,
+  .d-h3 .d-mark,
+  .d-quote .d-mark,
+  .d-list .d-mark {
+    position: absolute;
+    right: 100%;
+    margin-right: 0.8em;
+    white-space: nowrap;
+  }
+}
+
+.d-title {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 40px;
+  font-weight: 700;
+  font-variation-settings: 'opsz' 72;
+  font-size: clamp(40px, 6vw, 68px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.d-underline {
+  margin-top: 6px;
+  overflow: hidden;
+  font-family: var(--d-f-mono);
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  color: var(--d-accent);
+}
+
+.d-h2 {
+  margin: 72px 0 20px;
+  font-family: var(--d-f-serif);
+  font-weight: 400;
+  font-size: clamp(34px, 4.2vw, 54px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.d-h2 .d-mark {
+  font-size: 0.5em;
+  vertical-align: 0.2em;
+}
+
+.d-h3 {
+  margin: 44px 0 10px;
+  font-weight: 650;
+  font-size: 1.2em;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+.d-h3 .d-mark {
+  font-size: 0.8em;
+  color: var(--d-muted);
+}
+
+.d-h3--date {
+  font-family: var(--d-f-mono);
+  font-weight: 400;
+  font-size: 1em;
+  letter-spacing: 0.02em;
+}
+
+.d-p {
+  margin: 0 0 1.05em;
+}
+
+.d-quote {
+  margin: 0 0 8px;
+  font-family: var(--d-f-serif);
+  font-style: italic;
+  font-size: 1.35em;
+  line-height: 1.35;
+}
+
+.d-quote + :not(.d-quote) {
+  margin-top: 28px;
+}
+
+.d-list {
+  margin: 0 0 1.2em;
+  padding: 0;
+  list-style: none;
+}
+
+.d-list li {
+  margin: 0 0 4px;
+}
+
+.d-rule {
+  margin: 64px 0;
+  text-align: center;
+  font-family: var(--d-f-mono);
+  letter-spacing: 0.6em;
+  color: var(--d-muted);
+}
+
+.d-sign {
+  margin: 0;
+  font-family: var(--d-f-mono);
+  font-size: 0.9em;
+  color: var(--d-muted);
+}
+
+.d-file a {
+  text-decoration: underline;
+  text-decoration-color: var(--d-accent);
+  text-underline-offset: 3px;
+}
+
+.d-file code {
+  font-family: var(--d-f-mono);
+  font-size: 0.92em;
+}
+
+/* ── Foot ──────────────────────────────────────────────────────── */
+
+.d-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  padding: 18px var(--d-pad) 28px;
+  border-top: 1px solid var(--d-line);
+  font-family: var(--d-f-mono);
+  font-size: 14px;
+  color: var(--d-muted);
+}
+
+.d-foot span {
+  margin-right: auto;
+  color: var(--d-ink);
+}
+
+.d-foot a {
+  text-decoration: none;
+}
+
+.d-foot a:hover {
+  color: var(--d-accent);
+}
+
+/* ── Motion ────────────────────────────────────────────────────── */
+
+@keyframes d-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes d-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes d-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@keyframes d-bob {
+  0%,
+  100% {
+    transform: none;
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+/* Lines of the file rise in as they scroll into view. Browsers without
+   scroll-driven animations just show the text. */
+@supports (animation-timeline: view()) {
+  .d-r {
+    animation: d-rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 55%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diary *,
+  .diary *::after {
+    animation: none !important;
+  }
+}
